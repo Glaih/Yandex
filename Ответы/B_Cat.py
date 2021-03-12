@@ -6,7 +6,7 @@ class AbstractCat:
     def eat(self, food_given):
         food = food_given + self.leftovers
         self.leftovers = food % 10
-        self.weight += food // 10
+        self.weight = self.weight + food // 10 if (self.weight + food // 10) <= 100 else 100
 
     def __str__(self):
         return f"{self.__class__.__name__} ({self.weight})"
@@ -41,9 +41,3 @@ class Cat(Kitten):
     @staticmethod
     def catch_mice():
         return 'Got it!'
-
-
-kit = Kitten(32)
-print(kit.sleep())
-kit.eat(30)
-print(kit.sleep())
