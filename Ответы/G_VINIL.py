@@ -1,6 +1,9 @@
 import psycopg2
 from os import environ
-conn = psycopg2.connect(dbname='Yandex_vinil', user=environ['DB_LOGIN'],
+
+DB_NAME = 'Yandex_vinil'
+
+conn = psycopg2.connect(dbname=DB_NAME, user=environ['DB_LOGIN'],
                         password=environ['DB_PASSWORD'], host=environ['DB_HOST'], port=64320)
 cursor = conn.cursor()
 cursor.execute('select musicians.name, labels.name, albums.name, albums.rating from albums'
