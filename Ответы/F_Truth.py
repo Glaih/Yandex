@@ -39,36 +39,44 @@ args = parser.parse_args()
 #     f.writelines(processed_data)
 
 
-class DataProcessor:
+class Data:
     def __init__(self, host, port, smallest, not_mult):
-        host_url = f'http://{host}:{port}/data'
-        self.data = requests.get(host_url).json()['data']
-        self.keys = sorted(list(self.data[1].keys()))
-        self.smallest = smallest
-        self.not_mult = not_mult
+        self.host = host
+        self.port = port
+        self.smallest = int(smallest)
+        self.not_mult = int(not_mult)
 
     def _create_dict(self):
         created_dict = {}
-        for k in enumerate(self.keys):
-            created_dict[k[1]] = []
+        data = self._get_data()
+        keys = sorted(list(data[1].keys()))
+        for k in keys:
+            created_dict[k] = []
 
-        for i in enumerate(self.data):
-            for k in enumerate(self.keys):
-                for e in i[1][k[1]]:
-                    if e >= int(self.smallest) and e % int(self.not_mult) != 0:
-                        created_dict[k[1]].append(e)
+        for i in range(len(data)):
+            for k in keys:
+                created_dict[k] += data[i][k]
 
-        return created_dict
+        return created_dict, keys
+
+    def _get_data(self):
+        host_url = f'http://{self.host}:{self.port}/data'
+        data = requests.get(host_url).json()['data']
+        return data
 
     def process(self, write=True):
         processed_data = []
-        overall_dict = self._create_dict()
-        for k in enumerate(self.keys):
-            processed_data.append(f'{k[1]};'
-                                  f'{max(overall_dict[k[1]])};'
-                                  f'{min(overall_dict[k[1]])};'
-                                  f'{round(sum(overall_dict[k[1]]) / len(overall_dict[k[1]]), 2)};'
-                                  f'{sum(overall_dict[k[1]])}\n')
+        overall_dict, keys = self._create_dict()
+
+        for k in keys:
+            overall_dict[k] = [e for e in overall_dict[k] if e >= self.smallest and e % self.not_mult != 0]
+
+            processed_data.append(f'{k};'
+                                  f'{max(overall_dict[k])};'
+                                  f'{min(overall_dict[k])};'
+                                  f'{round(sum(overall_dict[k]) / len(overall_dict[k]), 2)};'
+                                  f'{sum(overall_dict[k])}\n')
+
         if write:
             self._write_to_file(processed_data)
 
@@ -80,5 +88,5 @@ class DataProcessor:
             f.writelines(data)
 
 
-data = DataProcessor(args.host, args.port, args.smallest, args.not_mult)
+data = Data(args.host, args.port, args.smallest, args.not_mult)
 data.process()
