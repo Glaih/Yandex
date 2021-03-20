@@ -6,6 +6,9 @@ class Carriage:
         self.number = number
         self.speed = speed
 
+    def __repr__(self):
+        return f"{self.__class__.__name__} - {self.number}"
+
 
 class Car(Carriage):
     def __init__(self, number, speed, fuel):
@@ -45,24 +48,8 @@ def add_racer(num):
 
 
 def race(racers, time, length):
-    to_finish = 1
-    winner = 1
-
     for racer in racers:
-        if winner < racer.number:
-            winner = racer.number
-
-    for racer in racers:
-        if round((modf(racer.speed * time / length))[0], 3) > 0.5:
-            if 1 - round((modf(racer.speed * time / length))[0], 3) <= to_finish:
-                to_finish = 1 - round((modf(racer.speed * time / length))[0], 1)
-                if winner > racer.number:
-                    winner = racer.number
-        else:
-            if round((modf(racer.speed * time / length))[0], 1) <= to_finish:
-                to_finish = round((modf(racer.speed * time / length))[0], 1)
-                if winner > racer.number:
-                    winner = racer.number
+        print()
 
     return winner
 
