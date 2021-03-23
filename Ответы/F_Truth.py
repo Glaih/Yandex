@@ -22,10 +22,10 @@ class DataParser:
 
     def _get_data(self):
         host_url = f'http://{self.host}:{self.port}/data'
-        data = requests.get(host_url).json()['data']
-        # data = [{"electric": [62, 45, 15, 44, 20], "magnetic": [47, 10, 43, 61], "gravitational": [5, 41, 63, -9, 9, 12], "fabracadabra": [1, 2, 3]},
-        #              {"electric": [1, 82, 56, 48], "magnetic": [-2, 58, 96, 14, 94], "gravitational": [-8, 98, -5]},
-        #              {"electric": [68, 81, 40, -2, -8], "magnetic": [74, -12, 67, 54], "gravitational": [85, -6]}]
+        # data = requests.get(host_url).json()['data']
+        data = [{"electric": [62, 45, 15, 44, 20], "magnetic": [47, 10, 43, 61], "gravitational": [5, 41, 63, -9, 9, 12]},
+                     {"electric": [1, 82, 56, 48], "magnetic": [-2, 58, 96, 14, 94], "gravitational": [-8, 98, -5]},
+                     {"electric": [68, 81, 40, -2, -8], "magnetic": [74, -12, 67, 54], "gravitational": [85, -6]}]
         return data
 
     def process(self, write=True):
@@ -37,7 +37,6 @@ class DataParser:
             'count': 0
         })
         data = self._get_data()
-        print(data)
         for element in data:
             for key, value in element.items():
                 for v in value:
@@ -61,7 +60,7 @@ class DataParser:
     def _write_to_file(data):
         with open('truth.csv', 'w', newline='') as f:
             writer = csv.writer(f, delimiter=';')
-            for key, value in data.items():
+            for key, value in sorted(data.items()):
                 value.pop('count')
                 writer.writerow([key, *value.values()])
 
