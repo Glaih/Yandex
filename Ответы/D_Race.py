@@ -48,8 +48,26 @@ def add_racer(num):
 
 
 def race(racers, time, length):
+    to_finish_dict = {}
+    winners_list = []
+
     for racer in racers:
-        print()
+        if round((modf(racer.speed * time / length))[0], 3) > 0.5:
+            to_finish_dict[racer.number] = round(1 - (modf(racer.speed * time / length))[0], 1)
+
+        else:
+            to_finish_dict[racer.number] = round((modf(racer.speed * time / length))[0], 1)
+
+    race_total = to_finish_dict.items()
+    length_closest_to_finish = min(set(to_finish_dict.values()))
+
+    for racer in race_total:
+        racer_number = racer[0]
+        length_to_finish = racer[1]
+        if length_to_finish == length_closest_to_finish:
+            winners_list.append(racer_number)
+
+    winner = min(winners_list)
 
     return winner
 
