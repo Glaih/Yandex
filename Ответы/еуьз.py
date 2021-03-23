@@ -36,7 +36,7 @@ class DataParser:
                 key_max = max(data_dict[key])
                 key_average = round((sum(data_dict[key]) / len(data_dict[key])), 2)
                 key_sum = sum(data_dict[key])
-                processed_data.append(f'{key};{key_max};{key_min};{key_average};{key_sum}\n')
+                processed_data.append(f'{key};{key_max};{key_min};{key_average};{key_sum}')
 
         if write:
             self._write_to_file(sorted(processed_data))
