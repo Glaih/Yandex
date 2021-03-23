@@ -1,3 +1,5 @@
 venv/
 .idea
 .git
+input_D
+truth.csv
