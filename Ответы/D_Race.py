@@ -1,4 +1,5 @@
 from math import modf
+from collections import defaultdict
 
 
 class Carriage:
@@ -31,45 +32,32 @@ class Bike(Car):
 racers_num, track_length, race_time = map(int, input().split(' '))
 
 
-def add_racer(num):
-    starting_field = []
-
+def race(num, time, length):
+    to_finish_dict = defaultdict(list)
+    closest_to_finish = 1
     for _ in range(num):
         data = list(map(int, input().split(' ')))
         vehicle_type = data.pop(1)
         if vehicle_type == 3:
-            starting_field.append(Carriage(*data))
+            racer = Carriage(*data)
+            to_finish_dict = update_dictionary(racer, time, length, to_finish_dict)
         elif vehicle_type == 1:
-            starting_field.append(Car(*data))
+            racer = Car(*data)
+            to_finish_dict = update_dictionary(racer, time, length, to_finish_dict)
         elif vehicle_type == 2:
-            starting_field.append(Bike(*data))
+            racer = Bike(*data)
+            to_finish_dict = update_dictionary(racer, time, length, to_finish_dict)
 
-    return starting_field
-
-
-def race(racers, time, length):
-    to_finish_dict = {}
-    winners_list = []
-
-    for racer in racers:
-        if round((modf(racer.speed * time / length))[0], 3) > 0.5:
-            to_finish_dict[racer.number] = round(1 - (modf(racer.speed * time / length))[0], 1)
-
-        else:
-            to_finish_dict[racer.number] = round((modf(racer.speed * time / length))[0], 1)
-
-    race_total = to_finish_dict.items()
-    length_closest_to_finish = min(set(to_finish_dict.values()))
-
-    for racer in race_total:
-        racer_number = racer[0]
-        length_to_finish = racer[1]
-        if length_to_finish == length_closest_to_finish:
-            winners_list.append(racer_number)
-
-    winner = min(winners_list)
-
-    return winner
+    return min(to_finish_dict[min(to_finish_dict)])
 
 
-print(race(add_racer(racers_num), race_time, track_length))
+def update_dictionary(obj, time, length, dictionary):
+    if round((modf(obj.speed * time / length))[0], 3) > 0.5:
+        dictionary[round(1 - (modf(obj.speed * time / length))[0], 1)].append(obj.number)
+    else:
+        dictionary[round((modf(obj.speed * time / length))[0], 1)].append(obj.number)
+
+    return dictionary
+
+
+print(race(racers_num, race_time, track_length))
