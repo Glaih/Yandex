@@ -45,12 +45,14 @@ def race(num, time, length):
         elif vehicle_type == 2:
             racer = Bike(*data)
 
-        if round((modf(racer.speed * time / length))[0], 3) > 0.5:
-            to_finish = round(1 - (modf(racer.speed * time / length))[0], 1)
-            to_finish_dict[to_finish].append(racer.number)
+        current_circle = modf(racer.speed * time / length)
+
+        if round(current_circle[0], 3) > 0.5:
+            to_finish = round(1 - current_circle[0], 1)
         else:
-            to_finish = round((modf(racer.speed * time / length))[0], 1)
-            to_finish_dict[to_finish].append(racer.number)
+            to_finish = round(current_circle[0], 1)
+
+        to_finish_dict[to_finish].append(racer.number)
 
         if to_finish >= closest_to_finish:
             continue
