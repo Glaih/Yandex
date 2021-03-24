@@ -53,7 +53,7 @@ class DataParser:
     def _write_to_file(data):
         with open('truth.csv', 'w', newline='') as f:
             writer = csv.writer(f, delimiter=';')
-            writer.writerows(sorted(data.values()))
+            writer.writerows(sorted(data.values(), key=lambda x: x[0]))
 
 
 acquired_data = DataParser(args.host, args.port, args.smallest, args.not_mult)
