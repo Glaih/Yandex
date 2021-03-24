@@ -40,24 +40,24 @@ def race(num, time, length):
         vehicle_type = data.pop(1)
         if vehicle_type == 3:
             racer = Carriage(*data)
-            to_finish_dict = update_dictionary(racer, time, length, to_finish_dict)
         elif vehicle_type == 1:
             racer = Car(*data)
-            to_finish_dict = update_dictionary(racer, time, length, to_finish_dict)
         elif vehicle_type == 2:
             racer = Bike(*data)
-            to_finish_dict = update_dictionary(racer, time, length, to_finish_dict)
 
-    return min(to_finish_dict[min(to_finish_dict)])
+        if round((modf(racer.speed * time / length))[0], 3) > 0.5:
+            to_finish = round(1 - (modf(racer.speed * time / length))[0], 1)
+            to_finish_dict[to_finish].append(racer.number)
+        else:
+            to_finish = round((modf(racer.speed * time / length))[0], 1)
+            to_finish_dict[to_finish].append(racer.number)
 
+        if to_finish >= closest_to_finish:
+            continue
 
-def update_dictionary(obj, time, length, dictionary):
-    if round((modf(obj.speed * time / length))[0], 3) > 0.5:
-        dictionary[round(1 - (modf(obj.speed * time / length))[0], 1)].append(obj.number)
-    else:
-        dictionary[round((modf(obj.speed * time / length))[0], 1)].append(obj.number)
+        closest_to_finish = to_finish
 
-    return dictionary
+    return min(to_finish_dict[closest_to_finish])
 
 
 print(race(racers_num, race_time, track_length))
