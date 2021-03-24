@@ -30,15 +30,13 @@ class DataParser:
     def process(self, write=True):
         result = defaultdict(lambda: [])
         data = self._get_data()
-        count = 0
-        for element in data:
-            count += 1
+        for count, element in enumerate(data):
             for key, value in element.items():
                 for v in value:
                     if v < self.smallest or v % self.not_mult == 0:
                         continue
                     result[key].append(v)
-                if count != len(element):
+                if count != len(element) - 1:
                     continue
                 result[key] = [key, max(result[key]), min(result[key]), round(sum(result[key]) / len(result[key]), 2),
                                sum(result[key])]
@@ -49,8 +47,8 @@ class DataParser:
         return result
 
 # If newline='' is not specified, newlines embedded inside quoted fields will not be interpreted correctly, and on
-# platforms that use \r\n lineendings on write an extra \r will be added. It should always be safe to specify newline='',
-# since the csv module does its own (universal) newline handling.
+# platforms that use \r\n line endings on write an extra \r will be added. It should always be safe to specify
+# newline='', since the csv module does its own (universal) newline handling.
     @staticmethod
     def _write_to_file(data):
         with open('truth.csv', 'w', newline='') as f:
