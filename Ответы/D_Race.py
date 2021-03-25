@@ -1,5 +1,4 @@
-from math import modf
-from collections import defaultdict
+from math import modf, inf
 
 
 class Carriage:
@@ -33,8 +32,8 @@ racers_num, track_length, race_time = map(int, input().split(' '))
 
 
 def race(num, time, length):
-    to_finish_dict = defaultdict(list)
     closest_to_finish = 1
+    winner = inf
     for _ in range(num):
         data = list(map(int, input().split(' ')))
         vehicle_type = data.pop(1)
@@ -52,14 +51,15 @@ def race(num, time, length):
         else:
             to_finish = round(current_circle[0], 1)
 
-        to_finish_dict[to_finish].append(racer.number)
-
-        if to_finish >= closest_to_finish:
+        if to_finish > closest_to_finish:
             continue
+        elif to_finish < closest_to_finish:
+            closest_to_finish = to_finish
+            winner = racer.number
+        elif to_finish == closest_to_finish and winner > racer.number:
+            winner = racer.number
 
-        closest_to_finish = to_finish
-
-    return min(to_finish_dict[closest_to_finish])
+    return winner
 
 
 print(race(racers_num, race_time, track_length))
