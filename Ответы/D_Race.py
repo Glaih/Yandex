@@ -53,10 +53,9 @@ def race(num, time, length):
 
         if to_finish > closest_to_finish:
             continue
-        elif to_finish < closest_to_finish:
+
+        elif to_finish < closest_to_finish or (to_finish == closest_to_finish and winner > racer.number):
             closest_to_finish = to_finish
-            winner = racer.number
-        elif to_finish == closest_to_finish and winner > racer.number:
             winner = racer.number
 
     return winner
